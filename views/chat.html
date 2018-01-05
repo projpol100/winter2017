@@ -572,7 +572,7 @@
                             <button type="submit" class="btn btn-primary msger" id="sendmessage" name="sendmessage"><img src='images/send.png' height="30px" width="30px"></button>
                             <div class="fileupload msger" id="uploader1">
                                 <input type="file" id="uploadimg" />
-                                <img src='images/imgupload.png' height="30px" width="30px">
+                                
                             </div>
                           </div>
                         </div>
@@ -582,28 +582,7 @@
   </div>
 </div>
 
-<footer class="page-footer">
-          <div class="container">
-            <div class="row">
-              <div class="col l6 s12">
-                <h5 class="white-text">Amingaon Police Station</h5>
-                <p class="grey-text text-lighten-4">This website is updated and maintained by officials of Amingaon Police Station.</p>
-              </div>
-              <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="footer-copyright">
-            <div class="container">
-            © 2017 Copyright Amingaon Police Station
-            </div>
-          </div>
-        </footer>
+
 
 <!-- ////////////////////////////////////////////////// -->
 <script src="/socket.io/socket.io.js"></script>
@@ -808,15 +787,16 @@ function expander(object){
           var socket = io();
           $('#msgform').submit(function(){
             if(toRow!=null){
+              console.log("hello gi");
                 if(!isimage){
-                    socket.emit('chat message', {image: false, message: $('#message').val(), toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
+                    socket.emit('_chat', {image: false, message: $('#message').val(), toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
                     $('#message').val('');
                     return false;
                 }else{
                     var reader = new FileReader();
                       reader.onload = function() {
                         var arrayBuffer = this.result;
-                          socket.emit('chat message', {image: true, buffer: arrayBuffer, dateToInsert: "", filename: document.getElementById('uploadimg').files[0].name, message: '', toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
+                          socket.emit('_chat', {image: true, buffer: arrayBuffer, dateToInsert: "", filename: document.getElementById('uploadimg').files[0].name, message: '', toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
                       }
                       reader.readAsArrayBuffer(document.getElementById('uploadimg').files[0]);
                     $('#message').val('');
@@ -827,7 +807,7 @@ function expander(object){
           });
           
           
-          socket.on('chat message', function(msg){
+          socket.on('_chat', function(msg){
             if(msg.image){
                 var whatisit = "";
                 if(imgformats.indexOf(extractExtension(msg.filename))>-1){

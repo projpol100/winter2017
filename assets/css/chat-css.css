@@ -1,0 +1,436 @@
+<style>
+  @font-face {
+      font-family: 'Roboto-Bold';
+      src: url('fonts/roboto/Roboto-Bold.woff2') format('woff2'), /* Super Modern Browsers */
+           url('fonts/roboto/Roboto-Bold.woff') format('woff'); /* Legacy iOS */
+    }
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    nav ul a {
+      font-size: 14px;
+    }
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 450px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+        font-family: 'Roboto-Bold';
+        font-weight: bold;
+        font-size: 16px;
+      padding-top: 20px;
+      background-color: #ffcdd2;
+      height: 700px;
+      overflow: auto;
+    }
+    
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+    #ic1 {
+      position: relative;
+      left: 0px;
+      float: left;
+      top: -5px;
+      margin-right: 10px;
+      -webkit-filter: invert(1);
+      filter: invert(1);
+    }
+    .navbar-brand {
+      font-family: 'Vollkorn', 'Arial';
+      display: inline-block;
+      width: 250px;
+    }
+    .brand-name {
+      position: relative;
+      top: -7px;
+    }
+    #pic1 {
+      max-height: 100%;
+      max-width: 100%;
+    }
+    #pic2 {
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    .mycard {
+    padding-top: 20px;
+    margin: 10px 0 20px 0;
+    background-color: rgba(214, 224, 226, 0.2);
+    border-top-width: 0;
+    border-bottom-width: 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mycard .mycard-heading {
+    padding: 0 20px;
+    margin: 0;
+}
+
+.mycard .mycard-heading.simple {
+    font-size: 20px;
+    font-weight: 300;
+    color: #777;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.mycard .mycard-heading.image img {
+    display: inline-block;
+    width: 46px;
+    height: 46px;
+    margin-right: 15px;
+    vertical-align: top;
+    border: 0;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.mycard .mycard-heading.image .mycard-heading-header {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.mycard .mycard-heading.image .mycard-heading-header h3 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 16px;
+    color: #262626;
+}
+
+.mycard .mycard-heading.image .mycard-heading-header span {
+    font-size: 12px;
+    color: #999999;
+}
+
+.mycard .mycard-body {
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+.mycard .mycard-media {
+    padding: 0 20px;
+    margin: 0 -14px;
+}
+
+.mycard .mycard-media img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.mycard .mycard-actions {
+    min-height: 30px;
+    padding: 0 20px 20px 20px;
+    margin: 20px 0 0 0;
+}
+
+.mycard .mycard-comments {
+    padding: 20px;
+    margin: 0;
+    background-color: #f8f8f8;
+}
+
+.mycard .mycard-comments .comments-collapse-toggle {
+    padding: 0;
+    margin: 0 20px 12px 20px;
+}
+
+.mycard .mycard-comments .comments-collapse-toggle a,
+.mycard .mycard-comments .comments-collapse-toggle span {
+    padding-right: 5px;
+    overflow: hidden;
+    font-size: 12px;
+    color: #999;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mycard-comments .media-heading {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.mycard.people {
+    position: relative;
+    display: inline-block;
+    width: 300px;
+    height: 300px;
+    padding-top: 0;
+    margin-left: 20px;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.mycard.people:first-child {
+    margin-left: 0;
+}
+
+.mycard.people .mycard-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 100px;
+    height: 150px;
+    background-color: #ffffff;
+}
+
+.mycard.people .mycard-top.green {
+    background-color: #53a93f;
+}
+
+.mycard.people .mycard-top.blue {
+    background-color: #427fed;
+}
+
+.mycard.people .mycard-info {
+    position: absolute;
+    top: 150px;
+    display: inline-block;
+    width: 100%;
+    height: 101px;
+    overflow: hidden;
+    background: #ffffff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mycard.people .mycard-info .title {
+    display: block;
+    margin: 8px 14px 0 14px;
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #404040;
+}
+
+.mycard.people .mycard-info .desc {
+    display: block;
+    margin: 8px 14px 0 14px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 16px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+
+.mycard.people .mycard-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    padding: 10px 20px;
+    line-height: 29px;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mycard.hovercard {
+    position: relative;
+    padding-top: 0;
+    overflow: hidden;
+    text-align: center;
+    background-color: rgba(214, 224, 226, 0.2);
+}
+
+.mycard.hovercard .mycardheader {
+    background: url("/images/card.jpg");
+    background-size: cover;
+    height: 135px;
+}
+
+.mycard.hovercard .avatar {
+    position: relative;
+    top: -50px;
+    margin-bottom: -50px;
+}
+
+.mycard.hovercard .avatar img {
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.5);
+}
+
+.mycard.hovercard .info {
+    padding: 4px 8px 10px;
+}
+
+.mycard.hovercard .info .title {
+    margin-bottom: 4px;
+    font-size: 24px;
+    line-height: 1;
+    color: #262626;
+    vertical-align: middle;
+}
+
+.mycard.hovercard .info .desc {
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 20px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+
+.mycard.hovercard .bottom {
+    padding: 0 20px;
+    margin-bottom: 17px;
+}
+
+.container1 {
+  width: 700px;
+}
+.row1 {
+  width: 700px;
+}
+.btn1 {
+  width: 100px;
+}
+#profiledp {
+  width: 500px;
+  height: 200px;
+}
+    .container {
+              font-family: 'Teko';
+       }
+       .chatbox {
+        width: 1000px;
+       }
+       .heading-chat {
+        background-color: #9e9e9e;
+        color: #003467;
+        font-weight: bold;
+        font-family: 'Teko';
+       }
+       .sidechatnav {
+        background-color: #424242;
+        color: #ccffcc;
+        height: 700px;
+        font-size: 20px;
+        font-weight: bold;
+        font-family: 'Teko';
+        overflow: auto;
+       }
+       .sidechatnav a{
+        color: #ccffcc;
+       }
+       .content-main {
+        background-color: #e0e0e0;
+        height: 650px;
+        overflow: auto;
+       }
+       #message {
+        margin-left: 10px;
+        position: relative;
+        left: -35px;
+        width: 700px;
+        display: inline;
+        margin-right: 0px;
+       }
+       #sendmessage {
+        padding: 5px;
+        width: 50px;
+        margin-left: 0px;
+        display: inline;
+       }
+       #nameto {
+        font-size: 16px;
+        color: #124121;
+        font-family: 'Arial';
+       }
+       .frommsgs{
+            position: absolute;
+            left: 0px;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 10px;
+            font-size: 18px;
+            font-family: 'Barlow Condensed';
+            font-weight: bold;
+            background-color: #fafafa;
+            color: #4d2600;
+       }
+       .tomsgs{
+            position: absolute;
+            right: 0px;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 10px;
+            font-size: 18px;
+            font-family: 'Barlow Condensed';
+            font-weight: bold;
+            background-color: #fbe9e7;
+            color: #4d2600;
+       }
+       #table-head {
+            text-align: center;
+       }
+       .footer-copyright{
+            background-color: #b0bec5;
+       }
+       .page-footer {
+            background-color: #607d8b;
+       }
+
+       /*/////////////////////////////////////////*/
+       .fileupload {
+        margin-left: 10px;
+        margin-right: 10px;
+        display: inline-block;
+            width: 50px;
+            height: 36px;
+            -webkit-appearance: button;
+            touch-action: manipulation;
+            -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            border-color: #2e6da4;
+            position: relative;
+            overflow: hidden;
+            background: #337ab7;
+        }
+
+        .fileupload input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            opacity: 0.0;
+            filter: alpha(opacity=0);
+            font-size: 300px;
+            height: 200px;
+        }
+        .msger {
+            float: left;
+        }
+        .timeDisp {
+            color: #7e57c2;
+            font-size: 10px;
+        }
+  </style>
