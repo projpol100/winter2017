@@ -1,0 +1,52 @@
+       <div class="modal fade" id="myEmail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title text-center" id="myModalLabel">Email</h4>
+    </div>
+    <div class="modal-body">
+    <form action="/sendemail" method="POST" encType="multipart/form-data" accept-charset="UTF-8">
+          
+           	<input type="hidden" id="userID" name="userID" value=<%= row.userID %>>
+            <div class="input-group">
+                    <span class="input-group-addon">
+                      <i class="material-icons">face</i>
+                    </span>
+                    <input required type="text" name="user_name" id="user_name" class="form-control" placeholder="Name">
+           </div>
+           
+           <div class="input-group">
+                    <span class="input-group-addon">
+                      <i class="material-icons">email</i>
+                    </span>
+                    <input required type="email" name="email" id="email" class="form-control" placeholder="E-mail">
+           </div>
+           <div class="input-group">
+                    <span class="input-group-addon">
+                      <i class="material-icons">phone</i>
+                    </span>
+                    <input required type="(?=.*\d).{10}" name="contact" id="contact" class="form-control" placeholder="Contact">
+            </div>
+
+           <div class="input-group">
+                    <span class="input-group-addon">
+                      <i class="material-icons">edit</i>
+                    </span>
+                    <input required type="text" name="bio" id="bio" class="form-control" placeholder="Something about you....">
+            </div>
+            <div class="input-group">
+                     <span class="input-group-addon">
+                      <i class="material-icons">file upload</i>
+                    </span>
+                     <input type="file" name="profilePicUpload" id="profilePicUpload" />
+            </div>
+            <p class="text-center"> 
+      <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button> 
+    <button type="submit" name="adduser" id="submit" class="btn btn-info btn-success">Save</button>
+   </p>
+        </form>
+    </div>
+  </div>
+  </div>
+</div>

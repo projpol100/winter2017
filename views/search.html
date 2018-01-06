@@ -1,0 +1,347 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Assam Police</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+	<link rel = "stylesheet" type = "text/css" href = "../assets/css/messagetab.css" />
+	<!-- CSS Files -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/css/material-kit.css" rel="stylesheet"/>
+    <script src="/socket.io/socket.io.js"></script>
+  <style>
+
+  #sidebar_secondary2{
+    height: 400px;
+  } 
+  #commentdiv{
+    margin-top: 20px;
+  } 
+  #commentdiv textarea{
+    width: 225px;
+  }
+  .filenameclass a{
+    font-size: 14px;
+  }
+  .avatar2{
+    position: relative;
+    top:-50px;
+    margin-bottom: -50px;
+  }
+  .avatar2 li{
+    background-color: #f3e5f5;
+  }
+  
+       .timeDisp {
+            color: #7e57c2;
+            font-size: 10px;
+        }
+        #expiry {
+        	height: 60px;
+        }
+        .avatar2 {
+          margin-left: 200px;
+        }
+        </style>
+</head>
+
+<body class="profile-page">
+	<nav class="navbar navbar-transparent navbar-fixed-top navbar-color-on-scroll">
+    	<div class="container">
+        	<!-- Brand and toggle get grouped for better mobile display -->
+        	<div class="navbar-header">
+        		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example">
+            		<span class="sr-only">Toggle navigation</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+        		</button>
+        
+        	</div>
+
+        			<div class="collapse navbar-collapse" id="navigation-example">
+        				<ul class="nav navbar-nav navbar-center">
+        				<!-- <form class="navbar-form navbar-center" method="post" action="/search" target="">
+		      				<div class="form-group">
+		        			<input type="text" id="query" autocomplete="false" class="form-control" placeholder="Search" name="search">
+		         
+		      				</div>
+    					</form> -->
+              <a href="/search"><i class="material-icons"  tooltip="Search">search</i></a>
+    				</ul>
+        				<ul class="nav navbar-nav navbar-right">
+        				
+        			 <li>
+		            	<a class="btn btn-simple btn-white btn-just-icon" href="/home"><i class="material-icons"> home</i></a>
+		            </li>
+		             
+		           
+		            
+        		</ul>
+        	</div>
+    	</div>
+    </nav>
+
+    <div class="wrapper">
+		<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&dpr=2&fit=crop&fm=jpg&h=750&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1450');"></div>
+
+		<div class="main main-raised">
+			<div class="profile-content">
+	            <div class="container">
+	                <div class="row">
+                    <div class="col-md-2">
+	                    <div class="profile">
+	                        <div class="avatar">
+	                         
+	                        </div>
+	                        <div class="name">
+	                            <h3 class="title" id="name_put"></h3>
+								<h6 id="designation_put"></h6>
+								<h5 id="email_put"></h5>
+	                        </div>
+	                    </div>
+	                
+	                <div class="description text-center">
+                        <p id="bio_put"> </p>
+	                </div>
+                  </div>
+					
+						<div class="col-md-8 ">
+							<div class="col-sm-10 text-left"> 
+       <input type="text" id="myInput" onkeyup="searchFunction()" placeholder="Search for names.." title="Type in a name">
+       <input name="group1" type="radio" id="name_radio" checked="checked">
+       <label for="name_radio">By Name</label>
+       <input name="group1" type="radio" id="to_radio">
+       <label for="to_radio">By Recepient</label>
+       <input name="group1" type="radio" id="from_radio">
+       <label for="from_radio">By Sender</label>
+
+             <table id="myTable" class="table table-hover">
+                     <thead>
+                            <th>Filename</th>
+                            <th>File Type</th>
+                            <th>Time</th>
+                            <th>From</th>
+                            <th>To</th>
+                     </thead>
+                     <tbody id="files">
+                            
+                     </tbody>
+              </table>
+    </div>
+							<!-- End Profile Tabs -->
+						</div>
+	                </div>
+
+	            </div>
+	        </div>
+		</div>
+
+    </div>
+
+<!-- ////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<div id="emailmodal">
+<!-- <div class="modal fade" id="myModal_102" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title text-center" id="myModalLabel">Send Files To Mohan (DSP)</h4></div><div class="modal-body"><form class="fileform11"><input type="hidden" id="userID" name="userID" value=101><div class="input-group"><span class="input-group-addon"><i class="material-icons">access_time</i></span><select name="expiry" id="expiry" multiple><option value="" disabled selected>Choose Number of Days:</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><select></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">label</i></span><input required type="text" name="tag" id="tag" class="form-control" placeholder="Tag"></div><div class="input-group"><span class="input-group-addon"><i class="material-icons"></i></span><textarea id="comment" name="comment" class="materialize-textarea"></textarea></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">file upload</i></span><input type="file" id="filesend" style="display: none;"/><input type="button" value="Browse.." onclick="document.getElementById('filesend').click()" /></div><p class="text-center"><button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button><button type="submit" name="submit" id="submit" class="btn btn-info btn-success">Send</button></p></form></div></div></div></div> -->
+</div>
+
+   
+   
+
+
+
+
+</body>
+	<!--   Core JS Files   -->
+	<script src="../assets/js/jquery.min.js" type="text/javascript"></script>
+	<script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="../assets/js/material.min.js"></script>
+
+	<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+	<script src="../assets/js/nouislider.min.js" type="text/javascript"></script>
+
+	<!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
+	<script src="../assets/js/bootstrap-datepicker.js" type="text/javascript"></script>
+
+	<!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
+	<script src="../assets/js/material-kit.js" type="text/javascript"></script>
+
+</html>
+<script type="text/javascript">
+// Using jQuery.
+
+
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    vars[key] = value;
+    });
+    return vars;
+}
+  
+    var rowVar = <%- JSON.stringify(row) %>;
+    var filenameFull = <%- JSON.stringify(filenameFull) %>;
+    console.log('<img alt="" src="images/profilePics/'+filenameFull+'">');
+    $( ".avatar" ).html('<img alt="Circle Image" class="img-circle img-responsive img-raised" src="images/profilePics/'+filenameFull+'">');
+
+    $( "#name_put" ).html("<b>"+rowVar.name+"</b>");
+    $( "#email_put" ).html("<b>"+rowVar.email+"</b>");
+     $( "#bio_put" ).html("<b>"+rowVar.bio+"</b>");
+    $( "#designation_put" ).html("<b>"+rowVar.designation+"</b>");
+   // $( "#station_put" ).html("<b>"+rowVar.station+"</b>");
+    var vars = getUrlVars();
+  
+    //$( "div.all-contents" ).load("views/"+vars['page']+".html");
+    
+
+  </script>
+
+  <script type="text/javascript">
+var toRow = null;
+var ddate = null;
+var filesSent = <%- JSON.stringify(filesSent) %>;
+
+
+
+
+function getRowById(allrowVar, userid){
+     for(var i=allrowVar.length-1; i>=0; i--){
+        if(allrowVar[i].userID == userid){
+            toRow = allrowVar[i];
+            break;
+        }
+     }
+}
+
+function getRowById2(userid){
+	var allrowVar2 = <%- JSON.stringify(allrows) %>;
+     for(var i=allrowVar2.length-1; i>=0; i--){
+        if(allrowVar[i].userID == userid){
+            return allrowVar2[i];
+        }
+     }
+     return null;
+}
+
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+          function _arrayBufferToBase64( buffer ) {
+                var binary = '';
+                var bytes = new Uint8Array( buffer );
+                var len = bytes.byteLength;
+                for (var i = 0; i < len; i++) {
+                    binary += String.fromCharCode( bytes[ i ] );
+                }
+                return window.btoa( binary );
+            }
+            function extractExtension(filename){
+              var patt1 = /\.([0-9a-z]+)(?:[\?#]|$)/i;
+                   var extension1 = (filename).match(patt1);
+                   var extension = extension1[1];
+                   return extension;
+            }
+          ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+ //    for(var i=0; i<allrowVar.length - 1; i++){
+ //    	var toPut1 = "";
+ //    	toPut1+=toggle2(allrowVar[i].userID);
+ //    	console.log(toPut1);
+ //    	// document.getElementById('emailmodal').innerHTML = toPut1;
+ //    }
+ //    function toggle2(userid){
+ //    	getRowById(allrowVar, userid);
+ //    	var toPut = '<div class="modal fade" id="myModal_'+userid+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title text-center" id="myModalLabel">Send Files To '+toRow.name+' ('+toRow.designation+')</h4></div><div class="modal-body"><form id="fileform"><input type="hidden" id="userID" name="userID" value=<%= row.userID %>><div class="input-group"><span class="input-group-addon"><i class="material-icons">access_time</i></span><select name="expiry" id="expiry" multiple><option value="" disabled selected>Choose Number of Days:</option>';
+	// 			      for(var i=1; i<30; i++){
+	// 			      	toPut+='<option value="'+i+'">'+i+'</option>';
+	// 			      }
+
+	// 			      toPut+='<select></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">label</i></span><input required type="text" name="tag" id="tag" class="form-control" placeholder="Tag"></div><div class="input-group"><span class="input-group-addon"><i class="material-icons"></i></span><textarea id="comment" name="comment" class="materialize-textarea"></textarea></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">file upload</i></span><input type="file" id="filesend" style="display: none;"/><input type="button" value="Browse.." onclick="document.getElementById(\'filesend\').click()" /></div><p class="text-center"><button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button><button type="submit" name="submit" id="submit" class="btn btn-info btn-success">Send</button></p></form></div></div></div></div>';
+	// // $('#emailmodal').html(toPut);
+	// return toPut;
+ //    }
+    
+    function searchFunction() {
+  // Declare variables 
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+var isName = true;
+var isTo = false;
+var isFrom = false;
+  if($('#name_radio').is(':checked')) {
+       var isName = true;
+       var isTo = false;
+var isFrom = false;
+  }else if($('#to_radio').is(':checked')){
+       var isName = false;
+       var isTo = true;
+var isFrom = false;
+  }else if($('#from_radio').is(':checked')){
+       var isName = false;
+       var isTo = false;
+var isFrom = true;
+  }
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+       if(isName){
+           td = tr[i].getElementsByTagName("td")[0];
+           if (td) {
+             if (td.getElementsByTagName("a")[0].innerHTML.toUpperCase().indexOf(filter) > -1) {
+               tr[i].style.display = "";
+             } else {
+               tr[i].style.display = "none";
+             }
+           } 
+       }else if(isTo){
+              td = tr[i].getElementsByTagName("td")[4];
+           if (td) {
+              console.log(td.innerHTML);
+             if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+               tr[i].style.display = "";
+             } else {
+               tr[i].style.display = "none";
+             }
+           } 
+       }else if(isFrom){
+              td = tr[i].getElementsByTagName("td")[3];
+           if (td) {
+              console.log(td.innerHTML);
+             if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+               tr[i].style.display = "";
+             } else {
+               tr[i].style.display = "none";
+             }
+           } 
+       }
+  }
+}
+var filesSent =  <%- JSON.stringify(filesSent) %>
+ // var filesSent = [];
+ for (var i=0; i<filesSent.length; i++){
+        $('#files').append($('<tr>').html('<td><a href="/images/tempfiles/'+filesSent[i].store+'" target="_blank">'+filesSent[i].name+'</td><td>'+(filesSent[i].ext).toUpperCase()+'</td><td>'+filesSent[i].time+'</td><td>'+filesSent[i].from+'</td><td>'+filesSent[i].to+'</td>'));
+ }
+
+          
+          
+
+
+
+</script>

@@ -35,6 +35,14 @@
   .filenameclass a{
     font-size: 14px;
   }
+  .avatar2{
+    position: relative;
+    top:-50px;
+    margin-bottom: -50px;
+  }
+  .avatar2 li{
+    background-color: #f3e5f5;
+  }
   .frommsgs{
           max-width: 80%;
             position: absolute;
@@ -71,7 +79,9 @@
         #expiry {
         	height: 60px;
         }
-
+        .avatar2 {
+          margin-left: 200px;
+        }
         </style>
 </head>
 
@@ -91,12 +101,13 @@
 
         			<div class="collapse navbar-collapse" id="navigation-example">
         				<ul class="nav navbar-nav navbar-center">
-        				<form class="navbar-form navbar-center" method="post" action="/search" target="">
+        				<!-- <form class="navbar-form navbar-center" method="post" action="/search" target="">
 		      				<div class="form-group">
 		        			<input type="text" id="query" autocomplete="false" class="form-control" placeholder="Search" name="search">
 		         
 		      				</div>
-    					</form>
+    					</form> -->
+              <a href="/search"><i class="material-icons"  tooltip="Search">search</i></a>
     				</ul>
         				<ul class="nav navbar-nav navbar-right">
         				
@@ -108,7 +119,7 @@
               <i class="material-icons"> message</i>
                 </li>
 					 <li>
-		                <a class="btn btn-simple btn-white btn-just-icon" href="/event" >
+		                <a class="btn btn-simple btn-white btn-just-icon" href="/events" >
 							<i class="material-icons">event</i>
 						</a>
 						
@@ -137,6 +148,7 @@
 			<div class="profile-content">
 	            <div class="container">
 	                <div class="row">
+                    <div class="col-md-2">
 	                    <div class="profile">
 	                        <div class="avatar">
 	                         
@@ -147,18 +159,18 @@
 								<h5 id="email_put"></h5>
 	                        </div>
 	                    </div>
-	                </div>
+	                
 	                <div class="description text-center">
                         <p id="bio_put"> </p>
 	                </div>
-
-					<div class="row">
-						<div class="col-md-8 col-md-offset-2">
-							<div class="profile-tabs">
-			                    <div class="nav-align-center">
+                  </div>
+					
+						<div class="col-md-8 ">
+							<div class="profile">
+			                    <div class="nav-align-center avatar2">
 									<ul class="nav nav-pills" role="tablist">
 								  <li class="active">
-											<a href="#studio" role="tab" data-toggle="tab">
+											<a href="#studio" role="tab" data-toggle="tab" >
 												<i class="material-icons">mail</i>New mail</a>
 									</li>
 									<li>
@@ -234,7 +246,8 @@
                             <th>File Tag</th>
                             <th>Comments</th>
                             <th>Expiry Time</th>
-                            <th>From</th>
+                            <th>To</th>
+                            <th>Alert</th>
                           </thead>
                           <tbody id="sendmail">
                           </tbody>
@@ -711,8 +724,16 @@ function togglesendMail(data){
       dateSQLToJS((sendmails[i].expireTime).replace('T', ' ').replace('Z', ''));
               var dateToPut = ddate.getDate() + "-"+(ddate.getMonth()+1)+"-"+ddate.getFullYear()+" "+ddate.getHours()+":"+ddate.getMinutes();
 
+
       $sendRow.append($('<td>').html(dateToPut));
-      $sendRow.append($('<td>').html(getRowById2(sendmails[i].fromID).name));
+      $sendRow.append($('<td>').html(getRowById2(sendmails[i].toID).name));
+      if(sendmails[i].flag==1){
+        $sendRow.append($('<td>').html('DONE!!')); 
+      }else if(sendmails[i].flag==0 && ddate > new Date()){
+        $sendRow.append($('<td>').html('PENDING!!!!')); 
+      }else{
+        $sendRow.append($('<td>').html('ALERT!!!!')); 
+      }
       $('#sendmail').append($sendRow);
   }
 

@@ -10,6 +10,12 @@ var btoa = require('btoa');
 var str_replace= require('locutus/php/strings/str_replace');
 var striptags= require('striptags');
 
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var ip = require('ip');
+var schedule = require('node-schedule');
+var path = require('path');
+
 // var multer = require('multer');
 
 //  var Storage = multer.diskStorage({
@@ -36,19 +42,20 @@ var app = express();
 var http = require('http').Server(app)
 var io = require('socket.io')(http);
 
-var myIp = "192.168.43.28";
+var myIp = "127.0.0.1";
 
-app.set('views', __dirname + '/views');
+app.set('views',path.join(__dirname,'views'));
 app.engine('html', require('ejs').renderFile);
 
 app.set('view engine', 'ejs');
+// app.use(logger('dev'));
 app.use(fileUpload({preserveExtension: 3}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(upload.array());
 app.use(cookieParser());
 app.use(session({secret: "hamunaptra", resave: false, saveUninitialized: true}));
-
+app.use(express.static(path.join(__dirname, 'public')));
 var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -58,7 +65,31 @@ var connection = mysql.createConnection({
     charset: 'utf8mb4'
 });
 var admin = {username: "sss2017", password: "PolProj@2017"};
-
+var i=0;
+function mysql_real_escape_string (str) {
+    return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+        switch (char) {
+            case "\0":
+                return "\\0";
+            case "\x08":
+                return "\\b";
+            case "\x09":
+                return "\\t";
+            case "\x1a":
+                return "\\z";
+            case "\n":
+                return "\\n";
+            case "\r":
+                return "\\r";
+            case "\"":
+            case "'":
+            case "\\":
+            case "%":
+                return "\\"+char; // prepends a backslash to backslash, percent,
+                                  // and double/single quotes
+        }
+    });
+}
 app.get('/admin', function(req, res){
     // console.log("SAFASFAS");
     res.render('admin.html', {message: ""});
@@ -78,20 +109,32 @@ app.post('/admin', function(req, res){
 });
 
 function checkAdmin(req, res, next){
-    //console.log("0------> "+req.session.user.username);
 
     if(req.session.user.username==admin.username && req.session.user.password == admin.password){
-        // console.log("ASdaf");
         next();
     }else{
-        var err = new Error("Not Admin!");
-        next(err);
+        res.render('admin.html', {message: "Login First"});
     }
 }
 
 app.get('/protected', checkAdmin, function(req, res){
-    // console.log("SADA");
-    
+    var prev_query = "CREATE TABLE IF NOT EXISTS Users (ID INT PRIMARY KEY AUTO_INCREMENT, userID INT NOT NULL, ipAddr VARCHAR(16) NOT NULL);";
+    connection.query(prev_query, function(err, rows, fields){
+           if(err){ 
+               throw err;
+           }else{
+                 console.log("HO GYA KYA?");
+           }
+       });
+    var next_query = "CREATE TABLE IF NOT EXISTS UserInfo (ID INT PRIMARY KEY AUTO_INCREMENT, name varchar(30) NOT NULL, email VARCHAR(30) NOT NULL, contact varchar(11) NOT NULL, designation varchar(20) NOT NULL);";
+    connection.query(next_query, function(err, rows, fields){
+           if(err){ 
+               throw err;
+           }else{
+               //console.log(tablename);
+                 console.log("HO GYA KYA?");
+           }
+       });
     connection.query("SELECT * FROM Users, UserInfo WHERE Users.id=UserInfo.id;", function(err, rows, fields){
        if(err){
               throw err;
@@ -99,8 +142,6 @@ app.get('/protected', checkAdmin, function(req, res){
               res.render('protected.html', {users: rows});
        }
     });
-    // res.render("protected.html", {users: null});
-    // res.render('protected.html');
 });
 
 app.post('/logout', function(req, res){
@@ -111,27 +152,25 @@ app.post('/logout', function(req, res){
 });
 
 app.post ('/removeuser', checkAdmin, function(req, res){
-  var selecteduser = req.body.removallist1;
-  var values = selecteduser.split('+');
-  // console.log("VALUE: ", values[0]+"-"+values[1]);
-  var id = values[0];
-  var userid = values[1];
-  connection.query("DELETE FROM Users WHERE id="+id+";", function(err, rows, fields){
+  var id = req.body.I;
+  var userid = req.body.ID;
+  console.log(id +"   " +userid);
+  connection.query("DELETE FROM Users WHERE id='"+id+"';", function(err, rows, fields){
         if(err){
                throw err;
         }else{
                console.log("Removed From Users");
         }
  });
-  connection.query("DELETE FROM UserInfo WHERE id="+id+";", function(err, rows, fields){
+  connection.query("DELETE FROM UserInfo WHERE id='"+id+"';", function(err, rows, fields){
         if(err){
                throw err;
         }else{
                console.log("Removed From UserInfo");
         }
  });
-var removemsgquery = "DELETE FROM messages WHERE fromID="+userid+" OR toID="+userid+";";
-// console.log(">>>> "+removemsgquery);
+  
+var removemsgquery = "DELETE FROM messages WHERE fromID='"+userid+"' OR toID='"+userid+"';";
 connection.query(removemsgquery, function(err, rows, fields){
         if(err){
                throw err;
@@ -160,7 +199,7 @@ app.post('/adduser', checkAdmin, function(req, res){
                      console.log("ADDED TO USERS");
               }
        });
-       connection.query("CREATE TABLE "+d_a_ta+" (id INT AUTO_INCREMENT PRIMARY KEY,fromID INT NOT NULL,toID INT NOT NULL,insertTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,expireTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,flag int default 0,filetag VARCHAR(100),filename VARCHAR(1000),downloadlink VARCHAR(100),fileextension VARCHAR(10), comments VARCHAR(300), seen tinyint(1) NOT NULL DEFAULT 0 );", function(err, rows, fields){
+       connection.query("CREATE TABLE if not exists "+d_a_ta+" (id INT AUTO_INCREMENT PRIMARY KEY,fromID INT NOT NULL,toID INT NOT NULL,insertTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,expireTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,flag int default 0,filetag VARCHAR(100),filename VARCHAR(1000),downloadlink VARCHAR(100),fileextension VARCHAR(10), comments VARCHAR(300), seen tinyint(1) NOT NULL DEFAULT 0 );", function(err, rows, fields){
               if(err){
                      throw err;
               }else{
@@ -176,6 +215,298 @@ app.post('/adduser', checkAdmin, function(req, res){
         });
        res.redirect('/protected');
 });
+
+app.get('/events',function(req,res){
+  
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  var ipadd = '"' + req.connection.remoteAddress + '"';
+  console.log(tablename+"-->"+ipadd);
+  connection.query("SELECT * from Users where ipAddr="+ipadd+";", function(err,rows,fields){
+    console.log(rows[0]);
+    var userID = rows[0].userID;
+  });
+  var prev_query = "CREATE TABLE IF NOT EXISTS "+ tablename+" (ID INT PRIMARY KEY AUTO_INCREMENT, userID INT NOT NULL, NAME VARCHAR(50) NOT NULL , DATE VARCHAR(20) NOT NULL, MESSAGE VARCHAR(255));";
+  connection.query(prev_query, function(err, rows, fields){
+           if(err){ 
+               throw err;
+           }else{
+               console.log(tablename);
+                 console.log("HO GYA KYA?");
+           }
+       });
+  connection.query("SELECT * FROM " + tablename + ";", function(err, rows, fields){
+       if(err){
+              throw err;
+       }else{
+              res.render('events.html', {users: rows, dates: {start: new Date().toISOString().slice(0, 19).replace('T', ' '), end: (new Date((new Date()).setDate((new Date()).getDate() + parseInt(7)))).toISOString().slice(0, 19).replace('T', ' ')}});
+       }
+    });
+});
+
+var process = function(allips, x){
+  if(x<allips.length){
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000
+    var tablename = "e"+((allips[x].replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+    
+    var curr_date = new Date(Date.now()-tzoffset).toISOString().slice(0, 19).replace('T', ' ');
+    var prev_query = "CREATE TABLE IF NOT EXISTS "+ tablename+" (ID INT PRIMARY KEY AUTO_INCREMENT, userID INT NOT NULL, NAME VARCHAR(50) NOT NULL , DATE VARCHAR(20) NOT NULL, MESSAGE VARCHAR(255));";
+    connection.query(prev_query, function(err, rows, fields){
+             if(err){ 
+                 throw err;
+             }else{
+                 //console.log(tablename);
+                   //console.log("HO GYA KYA?");
+             }
+         });
+    connection.query("select * from "+ tablename +" WHERE DATE >= NOW() order by DATE ASC;", function(err,rows,fields){
+      if(err){
+        throw err;
+      }else{
+        for(var i = 0; i < rows.length; i++){
+          console.log(curr_date + "--->>>" + rows[i].DATE + " -->> "+rows[i].userID + " -->  "+tablename + " --> ");
+          //console.log(rows.length);
+          if(rows[i].DATE === curr_date){
+            console.log("YE CHOR MACHAE SHOR");
+            io.emit('message intranet', {info: rows[i], ip: allips[x]});
+            //console.log(rows.length);
+            //alert("ye kya ho gya");
+          }else{
+            break;
+          }
+        }
+        process(allips, x+1);
+      }
+    });
+  }
+}
+
+var j = schedule.scheduleJob('00 * * * * *', function(){
+
+  var allips = [];
+
+  async.waterfall([function(callback){
+    var queryToRun = "SELECT * from Users;";
+    connection.query(queryToRun, function(err, rows, fields){
+      if(err){
+        throw err;
+      }else{
+        for(var i=0; i<rows.length; i++){
+          allips.push(rows[i].ipAddr);
+        }
+        callback();
+      }
+    });  
+  },
+  function(callback){
+    process(allips, 0);
+    callback(null, "FINAL!!")
+  }],function(err, result){
+    console.log(">>>>>> DONE  "+result);
+  });
+  
+});
+app.get('/search', function(req, res){
+
+  async.waterfall([
+              function(callback){
+                     if(!req.session.rowis)
+                            getUserInfo(req, req.connection.remoteAddress, callback);
+                      else
+                        callback();
+              },
+              function(callback){
+                connection.query('SELECT * from Users, UserInfo WHERE Users.id=UserInfo.id;', function(err, rows, fields){
+                   // connection.end();
+                   if(err){ 
+                       throw err;
+                   }else{
+                       req.session.allrows = rows;
+                       callback();
+                   }
+               });
+              },
+              function(callback){
+                     var rank=dict[req.session.rowis.designation];
+                    var queryToRun = 'SELECT * from common WHERE rank > '+rank+' or rank = '+rank+' ';
+                    // console.log(">>  "+queryToRun);
+                    var row = req.session.rowis;
+                    connection.query(queryToRun, function(err, rows, fields){
+                         if(err){ 
+                             throw err;
+                         }else{
+                            // console.log(JSON.stringify(rows));
+                             // res.send(JSON.stringify({rows: rows}));
+                             var dirn = 'images/profilePics/';
+                            fs.readdir(dirn, (err, files) => {
+                                   files.forEach(file => {
+                                          if(file.match(new RegExp('^[0-9]*')) == row.userID){
+                             res.render('search.html', {filesSent: rows, row: req.session.rowis, filenameFull: file, allrows: req.session.allrows});
+                                                done = true;
+                                          }
+                                   });
+                                   if(done==false){
+                             res.render('search.html', {filesSent: rows, row: req.session.rowis, filenameFull: "0.png", allrows: req.session.allrows});
+                                   }
+                            });
+                         }
+                     });
+              }
+       ], function(err, result){
+              
+       });
+})
+
+app.post('/changedate',function(req,res){
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  var ipadd = '"' + req.connection.remoteAddress + '"';
+  var year = req.body.change.slice(6,10);
+    var month = req.body.change.slice(0,2);
+    var Day = req.body.change.slice(3,5);
+    console.log(year + " " + month + " " + Day);
+    //var cont = req.cont;
+    var currr_date=new Date(year,month-1,Day,00,00,0);
+    var curr_date = new Date(currr_date.getTime()-(currr_date.getTimezoneOffset()*60000)).toISOString().slice(0, 19).replace('T', '  ');
+    //var curr_date = new Date(year,month-1,Day,00,00,00).toISOString().slice(0, 10).replace('T', ' ');
+    console.log(curr_date);
+    console.log("select * from "+ tablename +" WHERE DATE(DATE) = '"+curr_date+"' order by DATE ASC;");
+    connection.query("select * from "+ tablename +" WHERE DATE(DATE) = '"+curr_date+"' order by DATE ASC;", function(err,rows,fields){
+    if(err){
+      throw err;
+    }else{
+      res.render('events.html', {users: rows, dates: {thisDay: curr_date}});
+    }
+  });
+});
+
+
+
+
+app.post('/addevents',function(req,res){
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  var ipadd = '"' + req.connection.remoteAddress + '"';
+      var curr_message = req.body.message;
+    var curr_name = req.body.Name;
+    console.log(req.body.DATE);
+    console.log(typeof(req.body.DATE));
+    console.log(req.body.TIME);
+    console.log(typeof(req.body.TIME));
+    var year = req.body.DATE.slice(0,4);
+    var month = req.body.DATE.slice(5,7);
+    var Day = req.body.DATE.slice(8,10);
+    var hour = req.body.TIME.slice(0,2);
+    var minute = req.body.TIME.slice(3,5);
+    console.log(year + " " + month + " " + Day + " " + hour + " " + minute);
+    //var cont = req.cont;
+    var currr_date=new Date(year,month-1,Day,hour,minute,0);
+    var curr_date = new Date(currr_date.getTime()-(currr_date.getTimezoneOffset()*60000)).toISOString().slice(0, 19).replace('T', ' ');
+    //currr_date.setMinutes(currr_date.getMinutes()+currr_date.getTimezoneOffset());
+    //console.log(currr_date);
+    console.log(curr_date);
+  connection.query("SELECT * from Users where ipAddr="+ipadd+";", function(err,rows,fields){
+      console.log("Ye chalta hai");
+      console.log(JSON.stringify(rows));
+    var iduser = rows[0].userID;
+    console.log(rows[0].userID);
+      var prev_query = "CREATE TABLE IF NOT EXISTS " + tablename + "(ID INT PRIMARY KEY AUTO_INCREMENT,userID INT NOT NULL, NAME VARCHAR(50) NOT NULL , DATE VARCHAR(20) NOT NULL, MESSAGE VARCHAR(255) NOT NULL);";
+  connection.query(prev_query, function(err, rows, fields){
+           if(err){ 
+               throw err;
+           }else{
+               console.log(tablename);
+                 console.log("HO GYA"); console.log(iduser);
+           }
+       });
+  connection.query("INSERT INTO "+ tablename +" (userID, NAME , DATE, MESSAGE) VALUES ('"+iduser+"', '"+mysql_real_escape_string(curr_name)+"', '"+curr_date+"', '"+mysql_real_escape_string(curr_message)+"');", function(err, rows, fields){
+              if(err){
+                     throw err;
+              }else{
+                  console.log(curr_date);
+                  console.log(req.body.DATE);
+                   console.log(tablename);
+                     console.log("ADDED EVENT");
+              }
+       });
+
+  });
+    // var curr_event = new UserEvents({
+    //  message : curr_message,
+    //  date : curr_date,
+    //  IP : req.connection.remoteAddress;
+    // });
+    res.redirect('/events');
+});
+
+app.post('/deleteEvent',function(req,res){
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  var ipadd = '"' + req.connection.remoteAddress + '"';
+  var i = req.body.I;
+  connection.query("SELECT * from Users where ipAddr="+ipadd+";", function(err,rows,fields){
+    var userID = rows[0].userID;
+  });
+  //var cont = req.cont;
+  connection.query("DELETE from "+ tablename +" WHERE ID=" + i + ";", function(err, rows, fields){
+           if(err){ 
+               throw err;
+           }else{
+                 console.log("YE BHI HO GYA");
+           }
+       });
+  res.redirect('/events');
+});
+
+app.post('/today',function(req,res){
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  console.log(i+"-->");
+  i=0;
+  console.log(i);
+  var prev_query = "Select * from "+tablename+"  WHERE DATE >= CURDATE()-INTERVAL 1 DAY AND DATE <= CURDATE()+INTERVAL 1 DAY;";
+  connection.query(prev_query, function(err,rows,fields){
+    if(err){
+      throw(err);
+    }else{
+      console.log(prev_query);
+      res.render('events.html',{users:rows, dates: {start: new Date().toISOString().slice(0, 19).replace('T', ' '), end: (new Date((new Date()).setDate((new Date()).getDate() + parseInt(7)))).toISOString().slice(0, 19).replace('T', ' ')}});
+    }
+  });
+});
+
+app.post('/goleft',function(req,res){
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  console.log(i+"-->");
+  i=i-1;
+  console.log(i);
+  var l= -i*7-1; var r=(i+1)*7;
+  console.log("LLLLL -->> "+l+"  RRRR--> "+r);
+
+  var prev_query = "Select * from "+tablename+" WHERE DATE >= CURDATE() - INTERVAL DAYOFWEEK(CURDATE())+"+l+" DAY AND date <= CURDATE() - INTERVAL DAYOFWEEK(CURDATE())-"+r+" DAY;";
+  connection.query(prev_query, function(err,rows,fields){
+    if(err){
+      throw(err);
+    }else{
+      console.log(prev_query);
+      res.render('events.html',{users:rows, dates: {start: (new Date((new Date()).setDate((new Date()).getDate() - parseInt(l)))).toISOString().slice(0, 19).replace('T', ' '), end:  (new Date((new Date()).setDate((new Date()).getDate() + parseInt(r)))).toISOString().slice(0, 19).replace('T', ' ')}});
+    }
+  });
+});
+
+app.post('/goright',function(req,res){
+  var tablename = "e"+((req.connection.remoteAddress.replace('.', 'e')).replace('.', 'e')).replace('.', 'e');
+  console.log(i+"-->");
+  i=i+1;
+  console.log(i);
+  var l=1+i*7; var r=(i+1)*7;
+  console.log("22LLLLL -->> "+l+"  RRRR--> "+r);
+  var prev_query = "Select * from "+tablename+" WHERE DATE >= CURDATE() - INTERVAL DAYOFWEEK(CURDATE())-"+l+" DAY AND date <= CURDATE() - INTERVAL DAYOFWEEK(CURDATE())-"+r+" DAY;";
+  connection.query(prev_query, function(err,rows,fields){
+    if(err){
+      throw(err);
+    }else{
+      console.log(prev_query);
+      res.render('events.html',{users:rows, dates: {start: (new Date((new Date()).setDate((new Date()).getDate() + parseInt(l)))).toISOString().slice(0, 19).replace('T', ' '), end:  (new Date((new Date()).setDate((new Date()).getDate() + parseInt(r)))).toISOString().slice(0, 19).replace('T', ' ')}});
+    }
+  });
+});
+
 
 function getUserInfo(req, ip, callback1){
        console.log("IOP: "+ip);
@@ -424,29 +755,24 @@ app.get('/js/:name', function(req, res){
     // res.send('images/'+req.params.name);
     res.sendFile('js/'+req.params.name, {root: __dirname});
 });
-app.get('/assets/img/:name',function(req,res){
-  res.sendFile('assets/img/'+req.params.name, {root: __dirname});
-});
+
 app.get('/assets/img/examples/:name',function(req,res){
   res.sendFile('assets/img/examples/'+req.params.name, {root: __dirname});
 });
 
+app.get('/assets/img/:name',function(req,res){
+  res.sendFile(path.join(__dirname, '/assets/img', req.params.name));
+});
+
 app.get('/assets/css/:name',function(req,res){
-  res.sendFile('assets/css/'+req.params.name, {root: __dirname});
+  res.sendFile(path.join(__dirname, '/assets/css', req.params.name));
+  
 });
 
 app.get('/assets/js/:name',function(req,res){
-  res.sendFile('assets/js/'+req.params.name, {root: __dirname});
+  res.sendFile(path.join(__dirname, '/assets/js', req.params.name));
 });
 
-
-app.get('/assets/css/:name',function(req,res){
-  res.sendFile('assets/css/'+req.params.name, {root: __dirname});
-});
-
-app.get('/assets/js/:name',function(req,res){
-  res.sendFile('assets/js/'+req.params.name, {root: __dirname});
-});
 
 app.get('/home*', function(req, res){
        // res.render('index.html');
@@ -759,6 +1085,34 @@ function removeQuotes(string){
                    console.log("UPDATED SEEN : " + msg.fromRow.userID);
              }
          });
+
+        queryToRun = "SELECT * from "+ d_a_ta + " WHERE toID="+msg.fromRow.userID+" AND id="+id+";";
+        connection.query(queryToRun, function(err, rows, fields){
+          if(err){
+            throw err;
+          }else{
+            var msgfile = rows[0];
+            queryToRun = "SELECT * from Users WHERE userID="+msgfile.fromID+";";
+            connection.query(queryToRun, function(err1, rows1, fields1){
+              if(err1){
+                throw err1;
+              }else{
+                var ip_addr = rows1[0].ipAddr;
+                var t2mp = ip_addr.split(/[."]+/)
+                var d_a_ta1="a"+t2mp[0]+"a"+t2mp[1]+"a"+t2mp[2]+"a"+t2mp[3];
+        var queryToRun1 = "UPDATE "+d_a_ta1+" SET flag=1 where fromID="+msgfile.fromID+" AND filetag='"+msgfile.filetag+"';";
+                connection.query(queryToRun1, function(err2, rows2, fields2){
+                  if(err2){
+                    throw err2;
+
+                  }else{
+                    console.log("VOILA!!!");
+                  }
+                });
+              }
+            });
+          }
+        });
         // console.log(">>$$$$$$$$$$$$$$$$$$$$ >>>>>>>>>>>>DATA "+d_a_ta);
     });
     socket.on('seen',function(msg){
