@@ -1009,8 +1009,10 @@ app.post('/picchange*', function(req, res){
                  
              });
             
-      if(typeof(req.files.profilePicUpload)=="undefined")
-        res.redirect('/');
+      if(!(req.files.profilePicUpload)){
+              res.redirect('/');
+              return res.end();
+       }
        let sampleFile = req.files.profilePicUpload;
        var mime1 = sampleFile.mimetype;
        var re = new RegExp('image/(.*)');
