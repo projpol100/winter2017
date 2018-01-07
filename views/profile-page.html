@@ -146,7 +146,7 @@
 
 		<div class="main main-raised">
 			<div class="profile-content">
-	            <div class="container">
+	            <div class="container" >
 	                <div class="row">
                     <div class="col-md-2">
 	                    <div class="profile">
@@ -288,7 +288,7 @@
 <form class="chat_submit_box" id="msgform">
     <div class="uk-input-group">
         <div  id="uploader1" class="fileupload msger">
-        <input type="file" id="uploadimg" style="display: none;"/>
+        <input type="file" id="uploadimg" style="display: none;" multiple />
         <input type="button" value="Browse.." onclick="document.getElementById('uploadimg').click()" />
         </div>
        <input type="text" class="md-input" autocomplete="false" id="message" name="message" placeholder="Enter Your Message">
@@ -342,7 +342,7 @@
     <div class="uk-input-group">
 
         <div  id="uploader1" class="fileupload msger">
-        <input type="file" id="filesend" style="display: none;"/>
+        <input type="file" id="filesend" style="display: none;" multiple />
         <input type="button" value="Browse.." onclick="document.getElementById('filesend').click()" />
         </div>
         
@@ -600,12 +600,11 @@ function getUrlVars() {
   
     var rowVar = <%- JSON.stringify(row) %>;
     var filenameFull = <%- JSON.stringify(filenameFull) %>;
-    console.log('<img alt="" src="images/profilePics/'+filenameFull+'">');
     $( ".avatar" ).html('<img alt="Circle Image" class="img-circle img-responsive img-raised" src="images/profilePics/'+filenameFull+'">');
 
     $( "#name_put" ).html("<b>"+rowVar.name+"</b>");
     $( "#email_put" ).html("<b>"+rowVar.email+"</b>");
-     $( "#bio_put" ).html("<b>"+rowVar.bio+"</b>");
+    if(rowVar.bio) $( "#bio_put" ).html("<b>"+rowVar.bio+"</b>");
     $( "#designation_put" ).html("<b>"+rowVar.designation+"</b>");
    // $( "#station_put" ).html("<b>"+rowVar.station+"</b>");
     var vars = getUrlVars();
@@ -896,7 +895,6 @@ function createNewConversation(toRow1){
         if(msgVar[i].seen == 1 && flag == 0){
         	$('#tick_'+i).attr('src', '/images/double-tick.png');
         }else{
-          console.log(">>>>>>>>>>>>>>>>HER$$$$$$$$$$$$$$$$$$$$$$$4E");
         	$('#tick_'+i).attr('src', '/images/tick.png');
         }
     }
@@ -955,10 +953,11 @@ function expander(object){
            data: {rowFrom: rowVar, rowTo: toRow},
            success: function(data){
              msgVar = (JSON.parse(data)).rows;
+             if(toRow!=null){
+                createNewConversation(toRow);
+            }
            }
          });
-        if(toRow!=null)
-            createNewConversation(toRow);
         var sock = io();
         sock.emit('seen', {frominfo: rowVar, toinfo: toRow});
     }
@@ -1019,14 +1018,17 @@ function expander(object){
 
      $('#fileform').submit(function(){
      	// alert("SADSAD");
-			  	console.log("HERER>>>>>>>>>>>>>>.");
           if(toRow!=null){
+            var j = document.getElementById('filesend').files.length;
+                  for (var i = document.getElementById('filesend').files.length - 1; i >= 0; i--) {
 			  	var reader = new FileReader();
               reader.onload = function() {
                 var arrayBuffer = this.result;
-	          	socket.emit('file message', {buffer: arrayBuffer, downloadlink: "", dateToInsert: "", filename: document.getElementById('filesend').files[0].name, toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes(), tag: $('#tag').val(), comment: $('#comment').val(), expiry: $('#expiry').val()});
+                j--;
+	          	socket.emit('file message', {buffer: arrayBuffer, downloadlink: "", dateToInsert: "", filename: document.getElementById('filesend').files[j].name, toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes(), tag: $('#tag').val(), comment: $('#comment').val(), expiry: $('#expiry').val()});
 	          	}
-              reader.readAsArrayBuffer(document.getElementById('filesend').files[0]);
+              reader.readAsArrayBuffer(document.getElementById('filesend').files[i]);
+            }
             }
             return false;
   	});
@@ -1039,12 +1041,16 @@ function expander(object){
                     $('#message').val('');
                     return false;
                 }else{
+                  var j = document.getElementById('uploadimg').files.length;
+                  for (var i = document.getElementById('uploadimg').files.length - 1; i >= 0; i--) {
                     var reader = new FileReader();
                       reader.onload = function() {
                         var arrayBuffer = this.result;
-                          socket.emit('_chat', {image: true, buffer: arrayBuffer, dateToInsert: "", filename: document.getElementById('uploadimg').files[0].name, message: '', toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
+                        j--;
+                          socket.emit('_chat', {image: true, buffer: arrayBuffer, dateToInsert: "", filename: document.getElementById('uploadimg').files[j].name, message: '', toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
                       }
-                      reader.readAsArrayBuffer(document.getElementById('uploadimg').files[0]);
+                      reader.readAsArrayBuffer(document.getElementById('uploadimg').files[i]);
+                    }
                     $('#message').val('');
                     isimage = false;
                     return false;

@@ -60,7 +60,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'satya',
+    password: 'hamunaptra',
     database: 'polproj100',
     charset: 'utf8mb4'
 });
@@ -109,7 +109,10 @@ app.post('/admin', function(req, res){
 });
 
 function checkAdmin(req, res, next){
-
+       if(!req.session.user){
+              res.render('admin.html', {message: "Login First"});
+              return;
+       }
     if(req.session.user.username==admin.username && req.session.user.password == admin.password){
         next();
     }else{
@@ -139,7 +142,7 @@ app.get('/protected', checkAdmin, function(req, res){
        if(err){
               throw err;
        }else{
-              res.render('protected.html', {users: rows});
+              res.render('protected.html', {users: rows, designations: dict});
        }
     });
 });
@@ -154,6 +157,7 @@ app.post('/logout', function(req, res){
 app.post ('/removeuser', checkAdmin, function(req, res){
   var id = req.body.I;
   var userid = req.body.ID;
+  var ipaddr = req.body.ip_addr;
   console.log(id +"   " +userid);
   connection.query("DELETE FROM Users WHERE id='"+id+"';", function(err, rows, fields){
         if(err){
@@ -178,6 +182,19 @@ connection.query(removemsgquery, function(err, rows, fields){
                console.log("Removed From messages");
         }
  });
+
+var dirn = 'images/profilePics/';
+       fs.readdir(dirn, (err, files) => {
+              files.forEach(file => {
+                     if(file.match(new RegExp('^[0-9]*')) == userid){
+                            // console.log(">> ** ", file);
+                            fs.unlink(dirn +''+ file, (err) => {
+                                   if(err) throw err;
+                            });
+                     }
+              });
+       });
+
   res.redirect('/protected');
 });
 
@@ -186,7 +203,6 @@ app.post('/adduser', checkAdmin, function(req, res){
        var email = req.body.email;
        var contact = req.body.contact;
        var design = req.body.designation;
-       var station = req.body.station;
        var ipaddr = req.body.ipaddr;
        var userId = req.body.userID;
        var t1mp=ipaddr.split(/[."]+/);
@@ -206,7 +222,7 @@ app.post('/adduser', checkAdmin, function(req, res){
                      console.log(d_a_ta+"table added");
               }
        });
-        connection.query("INSERT INTO UserInfo (name, email, contact, designation, station) VALUES ('"+username+"', '"+email+"', '"+contact+"', '"+design+"', '"+station+"');", function(err, rows, fields){
+        connection.query("INSERT INTO UserInfo (name, email, contact, designation) VALUES ('"+username+"', '"+email+"', '"+contact+"', '"+design+"');", function(err, rows, fields){
               if(err){
                      throw err;
               }else{
@@ -596,6 +612,7 @@ function homeMaker(req, res){
                         callback();
               },
         function(callback){
+              if(req.session.rowis){
                 connection.query('SELECT * from messages WHERE fromID="'+req.session.rowis.userID+'" OR toID="'+req.session.rowis.userID+'";', function(err, rows, fields){
                    if(err){ 
                        throw err;
@@ -605,6 +622,10 @@ function homeMaker(req, res){
                        callback();
                    }
                });
+         }else{
+              res.status(403).send("You Are Not Authorized To View This Page ! Please contact the administrator.");
+         }
+
               },
         function(callback){
                 connection.query('SELECT * from Users, UserInfo WHERE Users.id=UserInfo.id;', function(err, rows, fields){
@@ -1315,6 +1336,9 @@ function removeQuotes(string){
                         callback();
               },
         function(callback){
+              if(fromRow==null && req.session.rowis != null){
+                     fromRow = req.session.rowis;
+              }
           if(fromRow!=null){
           var queryToRun = "UPDATE messages SET seen=1 WHERE toID='"+fromRow.userID+"';"
           connection.query(queryToRun, function(err, rows, fields){
@@ -1341,7 +1365,7 @@ function removeQuotes(string){
                }else{
                   // console.log(JSON.stringify(rows));
                    res.send(JSON.stringify({rows: rows}));
-                   callback(null, 'HOLA! RES');
+                   callback(null, 'HOLA! RES22');
                }
            });
         }
