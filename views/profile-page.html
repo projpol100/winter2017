@@ -155,14 +155,12 @@
 	                        </div>
 	                        <div class="name">
 	                            <h3 class="title" id="name_put"></h3>
-								<h5 id="designation_put"></h6>
-								<h5 id="email_put"></h5>
+								<h7 id="designation_put"></h7>
+								<h7 id="email_put"></h7>
+                                  <h7 id="bio_put"></h7>
 	                        </div>
 	                    </div>
-	                
-	                <div class="description text-center">
-                        <h5><p id="bio_put"> </p></h5>
-	                </div>
+
                   </div>
 					
 						<div class="col-md-8 ">
@@ -324,7 +322,7 @@
     <span class="input-group-addon">
       <i class="material-icons">access_time</i>
     </span>
-    <input required type="text" name="expiry" id="expiry" class="form-control" placeholder="Deadline">
+    <input required type="date" name="expiry" id="expiry" class="form-control" placeholder="Deadline">
   </div>
 
   <div class="input-group">
@@ -945,7 +943,7 @@ function expander(object){
         }
         getRowById(allrowVar, userid);
         $('#nameto').text(toRow.name+","+toRow.designation);
-        $('#desto').text(toRow.station+","+toRow.email);
+        $('#desto').text(toRow.email);
         $('#td'+userid).css("background-color", "#113355");
         $.ajax({
            type: "POST",
@@ -1047,7 +1045,7 @@ function expander(object){
                       reader.onload = function() {
                         var arrayBuffer = this.result;
                         j--;
-                          socket.emit('_chat', {image: true, buffer: arrayBuffer, dateToInsert: "", filename: document.getElementById('uploadimg').files[j].name, message: '', toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
+                          socket.emit('_chat', {storename: "", image: true, buffer: arrayBuffer, dateToInsert: "", filename: document.getElementById('uploadimg').files[j].name, message: '', toinfo: toRow, frominfo: rowVar, timeOfMsg:  (new Date()).getDate() + "-"+((new Date()).getMonth()+1)+"-"+(new Date()).getFullYear()+" "+(new Date()).getHours()+":"+(new Date()).getMinutes()});
                       }
                       reader.readAsArrayBuffer(document.getElementById('uploadimg').files[i]);
                     }
@@ -1077,7 +1075,7 @@ function expander(object){
                 }else{
                     whatisit = "file";
                 }
-                var storeFilename = msg.frominfo.userID+'_'+msg.toinfo.userID+'_'+(msg.dateToInsert).replace(' ','-')+'.'+extractExtension(msg.filename);
+                var storeFilename = msg.storename;
                 if(msg.frominfo.userID == rowVar.userID){
                     if(whatisit == "image"){
                         $('#past-msgs').append($('<div class="frommsgs">').html('<a href="/images/tempfiles/'+storeFilename+'" target="_blank"><img src="data:image/jpeg;base64, '+_arrayBufferToBase64(msg.buffer)+'" height="100px" width="100px" alt="'+msg.filename+'" class="imgmsg"></a>'+ "<div class='timeDisp'>"+msg.timeOfMsg +"<img class='tick1' src='/images/tick.png' height=10 width=10></div>"));

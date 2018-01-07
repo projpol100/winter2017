@@ -3,7 +3,7 @@
 <head>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/favicon.jpg">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>Events</title>
@@ -76,146 +76,14 @@
       font-weight: bold;
       color: #006699;
     }
+    .ramu{
+
+    }
 
   </style>
     </head>
-
-
-
- <!--   <body>
-        <div class="panel panel-primary" id="whole">
-        <div class="panel-heading">Events</div>
-        <div class="panel-body">
-            <div class="panel panel-info" id="welcome"><div class="panel-heading">Welcome, User. Here are all your events.</div></div>
-            <form action="/addevent" method="POST">
-            <button type="submit" class="btn btn-info" id="ADD">ADD</button>
-            </form>
-            <hr width="100%">
-            <ul class="nav nav-tabs">
-              <li class="allmsg"><a data-toggle="tab" href="#home">Your Events here.</a></li>
-              <li><a data-toggle="tab" href="#menu1">Add Users To Network</a></li>
-              <li><a data-toggle="tab" href="#menu2">Remove Users</a></li>
-            </ul>
-            <script type="text/javascript">
-                var data = <%-JSON.stringify(users)%>;
-                
-            </script>
-            <div class="tab-content">
-              <div id="home" class="tab-pane fade in active">
-                <h3>Your events here.</h3>
-                <table class="table table-hover">
-                    <thead>
-                        <th>Serial</th>
-                        <th>Date</th>
-                        <th>Message</th>
-                    </thead>
-                    
-                    <tbody>
-                    <% for(var i=0; i<users.length; i++) {%>
-                       <tr>
-                         <td>
-                           <%= users[i].ID %>
-                         </td>
-                         <td>
-                           <%= users[i].DATE %>
-                         </td>
-                         <td>
-                           <%= users[i].MESSAGE %>
-                         </td>
-                       </tr>
-                    <% } %>
-                    </tbody>
-                </table>
-              </div>
-              <div id="menu1" class="tab-pane fade">
-                <h3>Add User To Network</h3>
-                
-
-
-<div class="panel panel-info">
-       <div class="panel-heading">Add Events....</div>
-       <div class="panel-body">
-              <form class="form-horizontal" action="/addevents" method="POST">
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="day">Date: </label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="day" name="day" placeholder="Enter the Date">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="month">Month: </label>
-                  <div class="col-sm-10"> 
-                    <input type="text" class="form-control" id="month" name="month" placeholder="Enter month">
-                  </div>
-                </div>
-                
-
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="year">Year: </label>
-                  <div class="col-sm-10"> 
-                    <input type="text" class="form-control" id="year" name="year" placeholder="Enter Year">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="hour">Hour: </label>
-                  <div class="col-sm-10"> 
-                    <input type="text" class="form-control" id="hour" name="hour" placeholder="Enter Hour">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="minute">Minute: </label>
-                  <div class="col-sm-10"> 
-                    <input type="text" class="form-control" id="minute" name="minute" placeholder="Enter minute">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="message">Message: </label>
-                  <div class="col-sm-10"> 
-                    <input type="text" class="form-control" id="message" name="message" placeholder="Enter message">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="station">User's Station: </label>
-                  <div class="col-sm-10"> 
-                    <input type="text" class="form-control" id="station" name="station" placeholder="Enter User's Station">
-                  </div>
-                </div>
-
-               
-                <div class="form-group"> 
-                  <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-primary" id="adduser" name="adduser">Add Event</button>
-                  </div>
-                </div>
-
-              </form>
-              </div>
-       </div>
-
-
-              </div>
-              <div id="menu2" class="tab-pane fade">
-                <h3>Remove</h3>
-                
-              </div>
-            </div>
-        </div>
-        </div> 
-                 
-
-                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/materialize.min.js"></script>
-
-                 
-    </body> -->
-
     <body class="components-page">
-      <nav class="navbar navbar-transparent navbar-fixed-top navbar-color-on-scroll">
+      <nav class="navbar navbar-transparent navbar-fixed-top ">
       <div class="container">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -230,33 +98,37 @@
 
               <div class="collapse navbar-collapse" id="navigation-example">
                 <ul class="nav navbar-nav navbar-left">
-                <!-- <img src="../assets/img/Home-Guard-Recruitment.jpg" alt="Assam police logo" width="200" height="200"> -->
+                  <a  href="/events" >
+              <img src="../assets/img/favicon.jpg" alt="Assam police logo" width="100" height="100">
+            </a>
+                
             </ul>
-                <ul class="nav navbar-nav navbar-center">
-                <form class="navbar-form navbar-center" method="post" action="/search" target="">
-                  <div class="form-group">
-                  <input type="text" id="query" autocomplete="false" class="form-control" placeholder="Search" name="search">
-             
-                  </div>
-              </form>
+                <ul class="nav navbar-nav ">
+                <a href="/search"><i class="material-icons"  tooltip="Search">search</i></a>
             </ul>
+            
                 <ul class="nav navbar-nav navbar-right">
                 
            <li>
-                    <a class="btn btn-simple btn-white btn-just-icon" href="https://twitter.com/CreativeTim" target="_blank" class="btn btn-simple btn-white btn-just-icon">
+                    <a class="btn btn-simple btn-white btn-just-icon" href="/events" target="_blank" class="btn btn-simple btn-white btn-just-icon">
               <i class="material-icons">event</i>
             </a>
             
                 </li>
             
                 <li>
-                    <a class="btn btn-simple btn-white btn-just-icon" href="https://twitter.com/CreativeTim" target="_blank" class="btn btn-simple btn-white btn-just-icon">
+                    <a class="btn btn-simple btn-white btn-just-icon" href="/" target="_blank" class="btn btn-simple btn-white btn-just-icon">
               <i class="material-icons"> message</i>
             </a>
             
                 </li>
                 <li>
-                  <a class="btn btn-simple btn-white btn-just-icon" href="http://www.creative-tim.com"><i class="material-icons"> home</i></a>
+                  <a class="btn btn-simple btn-white btn-just-icon" href="/events"><i class="material-icons"> home</i></a>
+                </li>
+                <li>
+                  <a  href="/events" class="ramu" >
+              <img src="../assets/img/favicon.jpg" alt="Assam police logo" width="100" height="100">
+            </a>
                 </li>
                 
             </ul>
@@ -280,7 +152,7 @@
         <div class="section">
     <div class="container">
         <div class="row">
-            <div class="col-md-12 col-md-offset-5">
+            <div class="col-md-2">
                 <div class="tim-container">
                   <script type="text/javascript">
                 var data = <%-JSON.stringify(users)%>;
@@ -310,22 +182,23 @@
                 </li>
                     </ul>       
                   </div>
-               </div>
-            </div>
-          <div id="datesinconsideration" class="text-center"></div>
-          <div class="tim-row">
+                  <div class="tim-row">
               <div class="nav-align-center"> 
-          <div class="col-md-2 col-md-offset-5"> 
+          
             <form action="/changedate" method="POST">
             <input required class="datepicker form-control" name="change" type="text" value="Date"/>
             <button class="btn btn-success btn-sm" type="submit" id="lol" name="lol">GO</button>
           </form>
-          </div>
+         
         </div>
           </div>
+               </div>
+            
+          <div id="datesinconsideration" class="text-center"></div>
+          
           <div class="tim-row">
         <div class="nav-align-center">
-          <div class="col-md-12 col-md-offset-0"> 
+          <div class="col-md-8 col-md-offset-1"> 
               <div id="home" class="tab-pane fade in active">
                 <table class="table table-hover">
                     <thead>
@@ -444,11 +317,14 @@
     </html>
 
      <script type="text/javascript">
-    // var dates = <%- JSON.stringify(dates) %>;
-    // if(dates.start!=null && dates.end!=null){
-    //   console.log("START >>>>>> "+dates.start+" END>> "+dates.end);
-    //   var start = dates.start.split(/[ "]+/)[0];
-    //   var end = dates.end.split(/[ "]+/)[0];
-    //   $('#datesinconsideration').html("<pre>"+start + "   "+end+"</pre>");
-    // }
-    // </script>
+    var dates = <%- JSON.stringify(dates) %>;
+    if(dates==null){
+      $('#datesinconsideration').html("<pre>"+"All Events"+"</pre>");
+    }else{
+        if(dates.start!=null && dates.end!=null){
+          var start = dates.start.split(/[ "]+/)[0];
+          var end = dates.end.split(/[ "]+/)[0];
+          $('#datesinconsideration').html("<pre>"+start + "   "+end+"</pre>");
+        }
+      }
+    </script>

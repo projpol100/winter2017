@@ -43,7 +43,10 @@
   .avatar2 li{
     background-color: #f3e5f5;
   }
-  
+
+  #myTable {
+    margin-left: 60px;
+  }
        .timeDisp {
             color: #7e57c2;
             font-size: 10px;
@@ -54,6 +57,10 @@
         .avatar2 {
           margin-left: 200px;
         }
+        #search-box {
+          margin-left: 60px;
+        }
+
         </style>
 </head>
 
@@ -73,29 +80,28 @@
 
         			<div class="collapse navbar-collapse" id="navigation-example">
         				<ul class="nav navbar-nav navbar-center">
-        				<!-- <form class="navbar-form navbar-center" method="post" action="/search" target="">
-		      				<div class="form-group">
-		        			<input type="text" id="query" autocomplete="false" class="form-control" placeholder="Search" name="search">
-		         
-		      				</div>
-    					</form> -->
+        				
               <a href="/search"><i class="material-icons"  tooltip="Search">search</i></a>
     				</ul>
         				<ul class="nav navbar-nav navbar-right">
         				
         			 <li>
-		            	<a class="btn btn-simple btn-white btn-just-icon" href="/home"><i class="material-icons"> home</i></a>
+		            	<a class="btn btn-simple btn-white btn-just-icon" href="/events"><i class="material-icons"> home</i></a>
 		            </li>
 		             
-		           
-		            
+		           <li>
+                  <a class="btn btn-simple btn-white btn-just-icon" href="/events"><i class="material-icons">event</i></a>
+                </li>
+		            <li>
+                  <a class="btn btn-simple btn-white btn-just-icon" href="/"><i class="material-icons">message</i></a>
+                </li>
         		</ul>
         	</div>
     	</div>
     </nav>
 
     <div class="wrapper">
-		<div class="header header-filter" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&dpr=2&fit=crop&fm=jpg&h=750&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1450');"></div>
+		<div class="header header-filter" style="background-image: url('/assets/img/photo-1423655156442-ccc11daa4e99.jpg');"></div>
 
 		<div class="main main-raised">
 			<div class="profile-content">
@@ -120,19 +126,30 @@
 					
 						<div class="col-md-8 ">
 							<div class="col-sm-10 text-left"> 
-       <input type="text" id="myInput" onkeyup="searchFunction()" placeholder="Search for names.." title="Type in a name">
-       <input name="group1" type="radio" id="name_radio" checked="checked">
-       <label for="name_radio">By Name</label>
-       <input name="group1" type="radio" id="to_radio">
-       <label for="to_radio">By Recepient</label>
-       <input name="group1" type="radio" id="from_radio">
-       <label for="from_radio">By Sender</label>
-
+              <div class="row" id="search-box">
+              <div class="input-group" id="commentdiv">
+                    <span class="input-group-addon">
+                      <i class="material-icons">search</i>
+                    </span>
+                       <input type="text" id="myInput" class="form-control" onkeyup="searchFunction()" placeholder="Search for names.." title="Type in a name">
+                       <input name="group1" type="radio" id="name_radio" checked="checked">
+                       <label for="name_radio">By Name</label>
+                       <input name="group1" type="radio" id="tag_radio">
+                       <label for="tag_radio">By Tag</label>
+                       <input name="group1" type="radio" id="to_radio">
+                       <label for="to_radio">By Recepient</label>
+                       <input name="group1" type="radio" id="from_radio">
+                       <label for="from_radio">By Sender</label>
+                </div>
+              </div>
              <table id="myTable" class="table table-hover">
                      <thead>
+                            <th>#</th>
                             <th>Filename</th>
                             <th>File Type</th>
-                            <th>Time</th>
+                            <th>Tag</th>
+                            <th>Insert Time</th>
+                            <th>Expire Time</th>
                             <th>From</th>
                             <th>To</th>
                      </thead>
@@ -150,18 +167,6 @@
 		</div>
 
     </div>
-
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////// -->
-
-
-<div id="emailmodal">
-<!-- <div class="modal fade" id="myModal_102" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title text-center" id="myModalLabel">Send Files To Mohan (DSP)</h4></div><div class="modal-body"><form class="fileform11"><input type="hidden" id="userID" name="userID" value=101><div class="input-group"><span class="input-group-addon"><i class="material-icons">access_time</i></span><select name="expiry" id="expiry" multiple><option value="" disabled selected>Choose Number of Days:</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><select></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">label</i></span><input required type="text" name="tag" id="tag" class="form-control" placeholder="Tag"></div><div class="input-group"><span class="input-group-addon"><i class="material-icons"></i></span><textarea id="comment" name="comment" class="materialize-textarea"></textarea></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">file upload</i></span><input type="file" id="filesend" style="display: none;"/><input type="button" value="Browse.." onclick="document.getElementById('filesend').click()" /></div><p class="text-center"><button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button><button type="submit" name="submit" id="submit" class="btn btn-info btn-success">Send</button></p></form></div></div></div></div> -->
-</div>
-
-   
-   
-
-
 
 
 </body>
@@ -214,7 +219,7 @@ function getUrlVars() {
 var toRow = null;
 var ddate = null;
 var filesSent = <%- JSON.stringify(filesSent) %>;
-
+var allrowVar = <%- JSON.stringify(allrows) %>;
 
 
 
@@ -254,55 +259,44 @@ function getRowById2(userid){
                    var extension = extension1[1];
                    return extension;
             }
-          ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
- //    for(var i=0; i<allrowVar.length - 1; i++){
- //    	var toPut1 = "";
- //    	toPut1+=toggle2(allrowVar[i].userID);
- //    	console.log(toPut1);
- //    	// document.getElementById('emailmodal').innerHTML = toPut1;
- //    }
- //    function toggle2(userid){
- //    	getRowById(allrowVar, userid);
- //    	var toPut = '<div class="modal fade" id="myModal_'+userid+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title text-center" id="myModalLabel">Send Files To '+toRow.name+' ('+toRow.designation+')</h4></div><div class="modal-body"><form id="fileform"><input type="hidden" id="userID" name="userID" value=<%= row.userID %>><div class="input-group"><span class="input-group-addon"><i class="material-icons">access_time</i></span><select name="expiry" id="expiry" multiple><option value="" disabled selected>Choose Number of Days:</option>';
-	// 			      for(var i=1; i<30; i++){
-	// 			      	toPut+='<option value="'+i+'">'+i+'</option>';
-	// 			      }
-
-	// 			      toPut+='<select></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">label</i></span><input required type="text" name="tag" id="tag" class="form-control" placeholder="Tag"></div><div class="input-group"><span class="input-group-addon"><i class="material-icons"></i></span><textarea id="comment" name="comment" class="materialize-textarea"></textarea></div><div class="input-group"><span class="input-group-addon"><i class="material-icons">file upload</i></span><input type="file" id="filesend" style="display: none;"/><input type="button" value="Browse.." onclick="document.getElementById(\'filesend\').click()" /></div><p class="text-center"><button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button><button type="submit" name="submit" id="submit" class="btn btn-info btn-success">Send</button></p></form></div></div></div></div>';
-	// // $('#emailmodal').html(toPut);
-	// return toPut;
- //    }
     
     function searchFunction() {
   // Declare variables 
-  var input, filter, table, tr, td, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-var isName = true;
-var isTo = false;
-var isFrom = false;
-  if($('#name_radio').is(':checked')) {
-       var isName = true;
-       var isTo = false;
-var isFrom = false;
-  }else if($('#to_radio').is(':checked')){
-       var isName = false;
-       var isTo = true;
-var isFrom = false;
-  }else if($('#from_radio').is(':checked')){
-       var isName = false;
-       var isTo = false;
-var isFrom = true;
-  }
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      var isName = true;
+      var isTo = false;
+      var isFrom = false;
+      var isTag = false;
+      if($('#name_radio').is(':checked')) {
+            isName = true;
+            isTo = false;
+           isFrom = false;
+           isTag = false;
+      }else if($('#to_radio').is(':checked')){
+            isName = false;
+            isTo = true;
+           isFrom = false;
+           isTag = false;
+      }else if($('#from_radio').is(':checked')){
+            isName = false;
+            isTo = false;
+            isTag = false;
+           isFrom = true;
+      }else if($('#tag_radio').is(':checked')){
+          isName = false;
+            isTo = false;
+            isTag = true;
+           isFrom = false;
+      }
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
        if(isName){
-           td = tr[i].getElementsByTagName("td")[0];
+           td = tr[i].getElementsByTagName("td")[1];
            if (td) {
              if (td.getElementsByTagName("a")[0].innerHTML.toUpperCase().indexOf(filter) > -1) {
                tr[i].style.display = "";
@@ -311,7 +305,7 @@ var isFrom = true;
              }
            } 
        }else if(isTo){
-              td = tr[i].getElementsByTagName("td")[4];
+              td = tr[i].getElementsByTagName("td")[7];
            if (td) {
               console.log(td.innerHTML);
              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
@@ -321,6 +315,16 @@ var isFrom = true;
              }
            } 
        }else if(isFrom){
+              td = tr[i].getElementsByTagName("td")[6];
+           if (td) {
+              console.log(td.innerHTML);
+             if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+               tr[i].style.display = "";
+             } else {
+               tr[i].style.display = "none";
+             }
+           } 
+       }else if(isTag){
               td = tr[i].getElementsByTagName("td")[3];
            if (td) {
               console.log(td.innerHTML);
@@ -333,15 +337,30 @@ var isFrom = true;
        }
   }
 }
+function getRowById2(userid){
+  var allrowVar2 = <%- JSON.stringify(allrows) %>;
+     for(var i=allrowVar2.length-1; i>=0; i--){
+        if(allrowVar[i].userID == userid){
+            return allrowVar2[i];
+        }
+     }
+     return null;
+}
+function dateSQLToJS(datein){
+    var tt = datein.split(/[- :]/);
+    if(parseInt(tt[4])>=30){
+        tt[3]=(parseInt(tt[3]) + 6) +"";
+        tt[4]=""+((parseInt(tt[4])+30)%60);
+    }else{
+        tt[3]=(parseInt(tt[3])+5)+"";
+        tt[4]=(parseInt(tt[4])+30)+"";
+    }
+    return new Date(Date.UTC(tt[0], tt[1]-1, tt[2], tt[3], tt[4], tt[5]));
+}
 var filesSent =  <%- JSON.stringify(filesSent) %>
  // var filesSent = [];
  for (var i=0; i<filesSent.length; i++){
-        $('#files').append($('<tr>').html('<td><a href="/images/tempfiles/'+filesSent[i].store+'" target="_blank">'+filesSent[i].name+'</td><td>'+(filesSent[i].ext).toUpperCase()+'</td><td>'+filesSent[i].time+'</td><td>'+filesSent[i].from+'</td><td>'+filesSent[i].to+'</td>'));
+        $('#files').append($('<tr>').html('<td>'+(i+1)+'</td><td><a href="/images/tempfiles/'+filesSent[i].downloadlink+'" target="_blank">'+filesSent[i].filename+'</td><td>'+(filesSent[i].fileextension).toUpperCase()+'</td><td>'+(filesSent[i].filetag)+'</td><td>'+dateSQLToJS((filesSent[i].insertTime).replace('T', ' ').replace('Z', ''))+'</td><td>'+dateSQLToJS((filesSent[i].expireTime).replace('T', ' ').replace('Z', ''))+'</td><td>'+getRowById2(filesSent[i].fromID).name+'</td><td>'+getRowById2(filesSent[i].toID).name+'</td>'));
  }
-
-          
-          
-
-
 
 </script>
