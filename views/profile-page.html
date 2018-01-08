@@ -82,6 +82,22 @@
         .avatar2 {
           margin-left: 200px;
         }
+        #send_mail {
+          padding: 10px;
+          width: 700px;
+        }
+        #shows {
+          padding: 10px;
+          width: 700px;
+        }
+        #work{
+          padding: 10px;
+          width: 700px;
+        }
+        #studio{
+          padding: 10px;
+          width: 700px;
+        }
         </style>
 </head>
 
@@ -193,10 +209,11 @@
 											</ul>
 												<table class="table table-hover" >
 													<thead>
+                                                                                                <th>#</th>
 														<th>Filename</th>
 														<th>File Tag</th>
 														<th>Comments</th>
-														<th>Expiry Time</th>
+														<th >Expiry Time</th>
 														<th>From</th>
 													</thead>
 													<tbody id="newmail">
@@ -208,6 +225,7 @@
                           </ul>
 											<table class="table table-hover" >
 													<thead>
+                          <th>#</th>
 														<th>Filename</th>
 														<th>File Tag</th>
 														<th>Comments</th>
@@ -224,6 +242,7 @@
 											</ul>
 											<table class="table table-hover" >
 													<thead>
+                          <th>#</th>
 														<th>Filename</th>
 														<th>File Tag</th>
 														<th>Comments</th>
@@ -240,6 +259,7 @@
                       </ul>
                         <table class="table table-hover" >
                           <thead>
+                          <th>#</th>
                             <th>Filename</th>
                             <th>File Tag</th>
                             <th>Comments</th>
@@ -682,8 +702,8 @@ function toggleNewMail(data){
 	$('#newmail').html('');
 	for(var i=start; i>=end; i--){
 		donewith.push(newmails[i].id);
-		console.log(JSON.stringify(newmails[i]));
 		var $newRow = $('<tr id="newmail_'+i+'"></tr>');
+          $newRow.append($('<td>').html(newmails.length - i));
 		$newRow.append($('<td>').html('<a href="'+newmails[i].downloadlink+'" target="_blank">'+newmails[i].filename+'</a>'));
 		$newRow.append($('<td>').html(newmails[i].filetag));
 			$newRow.append($('<td>').html(newmails[i].comments));
@@ -691,7 +711,7 @@ function toggleNewMail(data){
 			dateSQLToJS((newmails[i].expireTime).replace('T', ' ').replace('Z', ''));
 	            var dateToPut = ddate.getDate() + "-"+(ddate.getMonth()+1)+"-"+ddate.getFullYear()+" "+ddate.getHours()+":"+ddate.getMinutes();
 
-			$newRow.append($('<td>').html(dateToPut));
+			$newRow.append($('<td width="200">').html(dateToPut));;
 			$newRow.append($('<td>').html(getRowById2(newmails[i].fromID).name));
 			$('#newmail').append($newRow);
 	}
@@ -714,6 +734,7 @@ function togglesendMail(data){
   for(var i=start; i>=end; i--){
     console.log(JSON.stringify(sendmails[i]));
     var $sendRow = $('<tr id="sendmail_'+i+'"></tr>');
+    $sendRow.append($('<td>').html(sendmails.length - i));
     $sendRow.append($('<td>').html('<a href="'+sendmails[i].downloadlink+'" target="_blank">'+sendmails[i].filename+'</a>'));
     $sendRow.append($('<td>').html(sendmails[i].filetag));
       $sendRow.append($('<td>').html(sendmails[i].comments));
@@ -722,14 +743,14 @@ function togglesendMail(data){
               var dateToPut = ddate.getDate() + "-"+(ddate.getMonth()+1)+"-"+ddate.getFullYear()+" "+ddate.getHours()+":"+ddate.getMinutes();
 
 
-      $sendRow.append($('<td>').html(dateToPut));
+      $sendRow.append($('<td width="200">').html(dateToPut));;
       $sendRow.append($('<td>').html(getRowById2(sendmails[i].toID).name));
       if(sendmails[i].flag==1){
-        $sendRow.append($('<td>').html('DONE!!')); 
+        $sendRow.append($('<td>').html('DONE')); 
       }else if(sendmails[i].flag==0 && ddate > new Date()){
-        $sendRow.append($('<td>').html('PENDING!!!!')); 
+        $sendRow.append($('<td>').html('PENDING')); 
       }else{
-        $sendRow.append($('<td>').html('ALERT!!!!')); 
+        $sendRow.append($('<td>').html('ALERT')); 
       }
       $('#sendmail').append($sendRow);
   }
@@ -753,6 +774,7 @@ function toggleWorkingMail(data){
 	for(var i=start; i>=end; i--){
 		console.log(JSON.stringify(workingmails[i]));
 		var $workingRow = $('<tr id="workingmail_'+i+'"></tr>');
+            $workingRow.append($('<td>').html(workingmails.length - i));
 		$workingRow.append($('<td>').html('<a href="'+workingmails[i].downloadlink+'" target="_blank">'+workingmails[i].filename+'</a>'));
 		$workingRow.append($('<td>').html(workingmails[i].filetag));
 			$workingRow.append($('<td>').html(workingmails[i].comments));
@@ -760,7 +782,7 @@ function toggleWorkingMail(data){
 			dateSQLToJS((workingmails[i].expireTime).replace('T', ' ').replace('Z', ''));
 	            var dateToPut = ddate.getDate() + "-"+(ddate.getMonth()+1)+"-"+ddate.getFullYear()+" "+ddate.getHours()+":"+ddate.getMinutes();
 
-			$workingRow.append($('<td>').html(dateToPut));
+			$workingRow.append($('<td width="200">').html(dateToPut));;
 			$workingRow.append($('<td>').html(getRowById2(workingmails[i].fromID).name));
 			$workingRow.append($('<td>').html('<a id ="check_'+workingmails[i].id+'" class="btn-floating btn-large waves-effect waves-light btn-danger" onclick="donewith('+workingmails[i].id+')"><i class="material-icons">beenhere</i></a>'));
 			$('#workingmail').append($workingRow);
@@ -790,6 +812,7 @@ function toggleDoneMail(data){
 	for(var i=start; i>=end; i--){
 		console.log(JSON.stringify(donemails[i]));
 		var $doneRow = $('<tr id="newmail_'+i+'"></tr>');
+    $doneRow.append($('<td>').html(donemails.length - i));
 		$doneRow.append($('<td>').html('<a href="'+donemails[i].downloadlink+'" target="_blank">'+donemails[i].filename+'</a>'));
 		$doneRow.append($('<td>').html(donemails[i].filetag));
 			$doneRow.append($('<td>').html(donemails[i].comments));
@@ -797,7 +820,7 @@ function toggleDoneMail(data){
 			dateSQLToJS((donemails[i].expireTime).replace('T', ' ').replace('Z', ''));
 	            var dateToPut = ddate.getDate() + "-"+(ddate.getMonth()+1)+"-"+ddate.getFullYear()+" "+ddate.getHours()+":"+ddate.getMinutes();
 
-			$doneRow.append($('<td>').html(dateToPut));
+			$doneRow.append($('<td width="200">').html(dateToPut));;
 			$doneRow.append($('<td>').html(getRowById2(donemails[i].fromID).name));
 			$('#donemail').append($doneRow);
 	}
