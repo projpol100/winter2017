@@ -114,14 +114,11 @@
 	                        </div>
 	                        <div class="name">
 	                            <h3 class="title" id="name_put"></h3>
-								<h6 id="designation_put"></h6>
-								<h5 id="email_put"></h5>
+								<h7 id="designation_put"></h7><br>
+								<h7 id="email_put"></h7>
+                                                      <h7 id="bio_put"></h7>
 	                        </div>
 	                    </div>
-	                
-	                <div class="description text-center">
-                        <p id="bio_put"> </p>
-	                </div>
                   </div>
 					
 						<div class="col-md-8 ">
@@ -185,35 +182,7 @@
 	<script src="../assets/js/material-kit.js" type="text/javascript"></script>
 
 </html>
-<script type="text/javascript">
-// Using jQuery.
 
-
-
-function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-    vars[key] = value;
-    });
-    return vars;
-}
-  
-    var rowVar = <%- JSON.stringify(row) %>;
-    var filenameFull = <%- JSON.stringify(filenameFull) %>;
-    console.log('<img alt="" src="images/profilePics/'+filenameFull+'">');
-    $( ".avatar" ).html('<img alt="Circle Image" class="img-circle img-responsive img-raised" src="images/profilePics/'+filenameFull+'">');
-
-    $( "#name_put" ).html("<b>"+rowVar.name+"</b>");
-    $( "#email_put" ).html("<b>"+rowVar.email+"</b>");
-     $( "#bio_put" ).html("<b>"+rowVar.bio+"</b>");
-    $( "#designation_put" ).html("<b>"+rowVar.designation+"</b>");
-   // $( "#station_put" ).html("<b>"+rowVar.station+"</b>");
-    var vars = getUrlVars();
-  
-    //$( "div.all-contents" ).load("views/"+vars['page']+".html");
-    
-
-  </script>
 
   <script type="text/javascript">
 var toRow = null;
@@ -221,7 +190,15 @@ var ddate = null;
 var filesSent = <%- JSON.stringify(filesSent) %>;
 var allrowVar = <%- JSON.stringify(allrows) %>;
 
+var rowVar = <%- JSON.stringify(row) %>;
+console.log(">>> "+JSON.stringify(rowVar));
+    var filenameFull = <%- JSON.stringify(filenameFull) %>;
+    $( ".avatar" ).html('<img alt="Circle Image" class="img-circle img-responsive img-raised" src="images/profilePics/'+filenameFull+'">');
 
+    $( "#name_put" ).html("<b>"+rowVar.name+"</b>");
+    $( "#email_put" ).html("<b>"+rowVar.email+"</b>");
+    if(rowVar.bio) {$( "#bio_put" ).html("<b>"+rowVar.bio+"</b>");}
+    $( "#designation_put" ).html("<b>"+rowVar.designation+"</b>");
 
 function getRowById(allrowVar, userid){
      for(var i=allrowVar.length-1; i>=0; i--){
@@ -243,16 +220,6 @@ function getRowById2(userid){
 }
 
 
-// //////////////////////////////////////////////////////////////////////////////////////////////////
-          function _arrayBufferToBase64( buffer ) {
-                var binary = '';
-                var bytes = new Uint8Array( buffer );
-                var len = bytes.byteLength;
-                for (var i = 0; i < len; i++) {
-                    binary += String.fromCharCode( bytes[ i ] );
-                }
-                return window.btoa( binary );
-            }
             function extractExtension(filename){
               var patt1 = /\.([0-9a-z]+)(?:[\?#]|$)/i;
                    var extension1 = (filename).match(patt1);
